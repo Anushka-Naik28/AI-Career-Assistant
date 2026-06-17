@@ -3,20 +3,32 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: AI Career Copilot API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: resume
+    description: Resume analysis operations
+  - name: jobs
+    description: Job matching operations
+  - name: roadmap
+    description: Career roadmap operations
+  - name: interview
+    description: Mock interview operations
+  - name: portfolio
+    description: Portfolio content generation
+  - name: analytics
+    description: Analytics and dashboard
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +36,215 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /resume/analyze:
+    post:
+      operationId: analyzeResume
+      tags: [resume]
+      summary: Analyze a resume PDF
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResumeInput"
+      responses:
+        "200":
+          description: Analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeAnalysis"
+
+  /resume/history:
+    get:
+      operationId: getResumeHistory
+      tags: [resume]
+      summary: Get list of past resume analyses
+      responses:
+        "200":
+          description: List of analyses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResumeRecord"
+
+  /jobs/match:
+    post:
+      operationId: matchJob
+      tags: [jobs]
+      summary: Match a resume against a job description
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobMatchInput"
+      responses:
+        "200":
+          description: Match result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobMatchResult"
+
+  /jobs/history:
+    get:
+      operationId: getJobMatchHistory
+      tags: [jobs]
+      summary: Get past job match results
+      responses:
+        "200":
+          description: List of job matches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobMatchRecord"
+
+  /roadmap/generate:
+    post:
+      operationId: generateRoadmap
+      tags: [roadmap]
+      summary: Generate a career roadmap for a target role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoadmapInput"
+      responses:
+        "200":
+          description: Career roadmap
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CareerRoadmap"
+
+  /roadmap/history:
+    get:
+      operationId: getRoadmapHistory
+      tags: [roadmap]
+      summary: Get past roadmaps
+      responses:
+        "200":
+          description: List of roadmaps
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RoadmapRecord"
+
+  /interview/start:
+    post:
+      operationId: startInterview
+      tags: [interview]
+      summary: Start a new mock interview session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InterviewInput"
+      responses:
+        "201":
+          description: Interview session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewSession"
+
+  /interview/{sessionId}/answer:
+    post:
+      operationId: submitAnswer
+      tags: [interview]
+      summary: Submit an answer and get feedback + next question
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnswerInput"
+      responses:
+        "200":
+          description: Feedback and next question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewTurn"
+
+  /interview/history:
+    get:
+      operationId: getInterviewHistory
+      tags: [interview]
+      summary: Get past interview sessions
+      responses:
+        "200":
+          description: List of sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InterviewSummary"
+
+  /portfolio/generate:
+    post:
+      operationId: generatePortfolio
+      tags: [portfolio]
+      summary: Generate professional portfolio content
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortfolioInput"
+      responses:
+        "200":
+          description: Generated portfolio content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortfolioContent"
+
+  /analytics/dashboard:
+    get:
+      operationId: getDashboardStats
+      tags: [analytics]
+      summary: Get dashboard summary stats
+      responses:
+        "200":
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /analytics/ats-trend:
+    get:
+      operationId: getAtsTrend
+      tags: [analytics]
+      summary: Get ATS score trend over time
+      responses:
+        "200":
+          description: ATS trend data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AtsTrendPoint"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +252,360 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    ResumeInput:
+      type: object
+      required: [resumeDataUri, filename]
+      properties:
+        resumeDataUri:
+          type: string
+          description: Base64-encoded PDF data URI
+        filename:
+          type: string
+
+    ResumeAnalysis:
+      type: object
+      required: [atsScore, extractedInfo, keywordGaps, improvementSuggestions]
+      properties:
+        id:
+          type: integer
+        atsScore:
+          type: integer
+          minimum: 0
+          maximum: 100
+        extractedInfo:
+          type: object
+          required: [skills, education, experience, projects, certifications]
+          properties:
+            skills:
+              type: array
+              items:
+                type: string
+            education:
+              type: array
+              items:
+                type: string
+            experience:
+              type: array
+              items:
+                type: string
+            projects:
+              type: array
+              items:
+                type: string
+            certifications:
+              type: array
+              items:
+                type: string
+        keywordGaps:
+          type: array
+          items:
+            type: string
+        improvementSuggestions:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: ["string", "null"]
+
+    ResumeRecord:
+      type: object
+      required: [id, filename, atsScore, createdAt]
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        atsScore:
+          type: integer
+        createdAt:
+          type: string
+
+    JobMatchInput:
+      type: object
+      required: [jobDescription, resumeDataUri]
+      properties:
+        jobDescription:
+          type: string
+        resumeDataUri:
+          type: string
+        jobTitle:
+          type: ["string", "null"]
+
+    JobMatchResult:
+      type: object
+      required: [matchPercentage, skillGaps, improvementSuggestions]
+      properties:
+        id:
+          type: integer
+        matchPercentage:
+          type: integer
+          minimum: 0
+          maximum: 100
+        skillGaps:
+          type: array
+          items:
+            type: string
+        improvementSuggestions:
+          type: string
+        jobTitle:
+          type: ["string", "null"]
+        createdAt:
+          type: ["string", "null"]
+
+    JobMatchRecord:
+      type: object
+      required: [id, jobTitle, matchPercentage, createdAt]
+      properties:
+        id:
+          type: integer
+        jobTitle:
+          type: string
+        matchPercentage:
+          type: integer
+        createdAt:
+          type: string
+
+    RoadmapInput:
+      type: object
+      required: [targetRole]
+      properties:
+        targetRole:
+          type: string
+
+    CareerRoadmap:
+      type: object
+      required: [id, targetRole, overview, skills, certifications, projects, milestones, timelineSummary]
+      properties:
+        id:
+          type: integer
+        targetRole:
+          type: string
+        overview:
+          type: string
+        skills:
+          type: array
+          items:
+            type: string
+        certifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Certification"
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadmapProject"
+        milestones:
+          type: array
+          items:
+            $ref: "#/components/schemas/Milestone"
+        timelineSummary:
+          type: string
+        createdAt:
+          type: ["string", "null"]
+
+    Certification:
+      type: object
+      required: [name, provider, description]
+      properties:
+        name:
+          type: string
+        provider:
+          type: string
+        description:
+          type: string
+
+    RoadmapProject:
+      type: object
+      required: [name, description, difficulty, techStack, learningOutcomes]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        difficulty:
+          type: string
+          enum: [Beginner, Intermediate, Advanced]
+        techStack:
+          type: array
+          items:
+            type: string
+        learningOutcomes:
+          type: array
+          items:
+            type: string
+
+    Milestone:
+      type: object
+      required: [name, description, durationWeeks]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        durationWeeks:
+          type: integer
+
+    RoadmapRecord:
+      type: object
+      required: [id, targetRole, createdAt]
+      properties:
+        id:
+          type: integer
+        targetRole:
+          type: string
+        createdAt:
+          type: string
+
+    InterviewInput:
+      type: object
+      required: [role, experienceLevel]
+      properties:
+        role:
+          type: string
+        experienceLevel:
+          type: string
+
+    InterviewSession:
+      type: object
+      required: [id, role, experienceLevel, firstQuestion]
+      properties:
+        id:
+          type: integer
+        role:
+          type: string
+        experienceLevel:
+          type: string
+        firstQuestion:
+          type: string
+        createdAt:
+          type: ["string", "null"]
+
+    AnswerInput:
+      type: object
+      required: [answer, questionNumber, previousQuestion]
+      properties:
+        answer:
+          type: string
+        questionNumber:
+          type: integer
+        previousQuestion:
+          type: string
+
+    InterviewTurn:
+      type: object
+      required: [isComplete]
+      properties:
+        nextQuestion:
+          type: ["string", "null"]
+        feedback:
+          type: ["string", "null"]
+        score:
+          type: ["integer", "null"]
+        improvementSuggestions:
+          type: array
+          items:
+            type: string
+        isComplete:
+          type: boolean
+        concludingRemarks:
+          type: ["string", "null"]
+        overallScore:
+          type: ["integer", "null"]
+
+    InterviewSummary:
+      type: object
+      required: [id, role, experienceLevel, createdAt]
+      properties:
+        id:
+          type: integer
+        role:
+          type: string
+        experienceLevel:
+          type: string
+        overallScore:
+          type: ["integer", "null"]
+        questionsAnswered:
+          type: integer
+        createdAt:
+          type: string
+
+    PortfolioInput:
+      type: object
+      required: [resumeDataUri, userProfile, targetRole]
+      properties:
+        resumeDataUri:
+          type: string
+        userProfile:
+          type: string
+        targetRole:
+          type: string
+        existingContent:
+          type: ["string", "null"]
+
+    PortfolioContent:
+      type: object
+      required: [linkedInSummary, linkedInHeadline, professionalBio, projectDescriptions]
+      properties:
+        id:
+          type: integer
+        linkedInSummary:
+          type: string
+        linkedInHeadline:
+          type: string
+        professionalBio:
+          type: string
+        projectDescriptions:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: ["string", "null"]
+
+    DashboardStats:
+      type: object
+      required: [totalResumesAnalyzed, avgAtsScore, totalJobMatches, avgMatchScore, totalInterviews, avgInterviewScore, totalRoadmaps, careerReadinessScore]
+      properties:
+        totalResumesAnalyzed:
+          type: integer
+        avgAtsScore:
+          type: ["number", "null"]
+        totalJobMatches:
+          type: integer
+        avgMatchScore:
+          type: ["number", "null"]
+        totalInterviews:
+          type: integer
+        avgInterviewScore:
+          type: ["number", "null"]
+        totalRoadmaps:
+          type: integer
+        careerReadinessScore:
+          type: ["number", "null"]
+        recentActivity:
+          type: array
+          items:
+            $ref: "#/components/schemas/ActivityItem"
+
+    ActivityItem:
+      type: object
+      required: [type, description, createdAt]
+      properties:
+        type:
+          type: string
+        description:
+          type: string
+        createdAt:
+          type: string
+
+    AtsTrendPoint:
+      type: object
+      required: [date, score, filename]
+      properties:
+        date:
+          type: string
+        score:
+          type: integer
+        filename:
+          type: string

@@ -1,0 +1,196 @@
+You are a senior software architect, UI/UX designer, and full-stack engineer.
+
+Analyze the entire codebase of my AI Career Copilot application and transform it into a production-ready SaaS platform.
+
+Do NOT rebuild from scratch. Refactor and improve the existing application.
+
+Goals:
+
+* Improve architecture
+* Improve code quality
+* Improve UI/UX
+* Improve scalability
+* Improve performance
+* Improve accessibility
+* Improve responsiveness
+* Improve maintainability
+
+Project Overview:
+AI Career Copilot helps students and job seekers improve employability through:
+
+* Resume Analyzer
+* Job Match Engine
+* Career Roadmap Generator
+* Mock Interview Assistant
+* Project Recommendation Engine
+* Portfolio Content Generator
+* Analytics Dashboard
+
+Tasks:
+
+1. Architecture Review
+
+* Audit the entire codebase
+* Identify technical debt
+* Identify security risks
+* Identify performance bottlenecks
+* Create a detailed improvement report
+* Implement fixes
+
+2. UI/UX Redesign
+   Redesign the application inspired by:
+
+* Linear
+* Stripe Dashboard
+* Vercel
+* Notion
+* Arc Browser
+
+Requirements:
+
+* Premium SaaS appearance
+* Dark mode by default
+* Glassmorphism cards
+* Modern gradients
+* Smooth micro-interactions
+* Professional typography
+* Mobile-first responsiveness
+* Framer Motion animations
+* Beautiful empty states
+* Skeleton loaders
+* Error states
+
+3. Dashboard Improvements
+   Create a visually impressive dashboard containing:
+
+* ATS Score Trends
+* Skill Growth Analytics
+* Career Readiness Score
+* Interview Performance
+* Resume Improvement Progress
+* Project Completion Tracking
+
+Use:
+
+* Interactive charts
+* Animated cards
+* Insight panels
+* Progress indicators
+
+4. Resume Analyzer Improvements
+   Enhance:
+
+* Resume parsing accuracy
+* ATS scoring algorithm
+* Keyword extraction
+* Missing skills detection
+* Resume recommendations
+
+Provide:
+
+* Visual ATS gauge
+* Detailed scoring breakdown
+* Actionable improvement checklist
+
+5. Job Match Engine Improvements
+   Enhance:
+
+* Resume-to-job comparison
+* Match percentage calculation
+* Skill gap analysis
+* Keyword coverage analysis
+* AI-generated recommendations
+
+6. Career Roadmap Improvements
+   Generate:
+
+* Personalized roadmaps
+* Learning milestones
+* Project recommendations
+* Certification paths
+* Progress tracking
+
+Create:
+
+* Interactive roadmap UI
+* Timeline view
+* Milestone completion system
+
+7. Mock Interview System
+   Improve:
+
+* Question generation
+* Answer evaluation
+* Scoring accuracy
+* Feedback quality
+
+Add:
+
+* Interview history
+* Performance analytics
+* Weakness tracking
+
+8. Portfolio Generator
+   Generate:
+
+* About Me
+* Resume Summary
+* LinkedIn Headline
+* LinkedIn Summary
+* Project Descriptions
+
+Add:
+
+* Multiple AI-generated variations
+* Copy-to-clipboard actions
+
+9. Code Quality
+   Implement:
+
+* Reusable components
+* Feature-based folder structure
+* Type safety
+* API abstraction layer
+* Centralized state management
+* Environment variable validation
+* Error boundaries
+* Logging system
+
+10. Performance Optimization
+    Improve:
+
+* Page speed
+* Lazy loading
+* Code splitting
+* Bundle size
+* API efficiency
+
+11. Security
+    Review and improve:
+
+* Authentication flow
+* API protection
+* Input validation
+* Rate limiting
+* Secure environment variable usage
+
+12. Deployment Readiness
+    Prepare:
+
+* Production build configuration
+* Environment variable setup
+* Deployment documentation
+* Monitoring recommendations
+
+Final Deliverables:
+
+1. Refactored codebase
+2. Improved folder structure
+3. Modern SaaS UI
+4. Architecture documentation
+5. Security improvements
+6. Performance improvements
+7. Deployment-ready application
+
+Work feature-by-feature.
+After completing each feature, test it and verify functionality before proceeding to the next feature.

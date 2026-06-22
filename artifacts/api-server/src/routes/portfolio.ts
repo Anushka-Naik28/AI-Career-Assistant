@@ -62,25 +62,37 @@ Make the content compelling, professional, and tailored specifically to the ${ta
     };
   }
 
-  const [record] = await db
-    .insert(portfolioContentTable)
-    .values({
-      targetRole,
+  try {
+    const [record] = await db
+      .insert(portfolioContentTable)
+      .values({
+        targetRole,
+        linkedInHeadline: result.linkedInHeadline,
+        linkedInSummary: result.linkedInSummary,
+        professionalBio: result.professionalBio,
+        projectDescriptions: result.projectDescriptions,
+      })
+      .returning();
+
+    res.json({
+      id: record.id,
+      linkedInHeadline: record.linkedInHeadline,
+      linkedInSummary: record.linkedInSummary,
+      professionalBio: record.professionalBio,
+      projectDescriptions: record.projectDescriptions as string[],
+      createdAt: record.createdAt.toISOString(),
+    });
+  } catch (dbErr) {
+    req.log.warn({ dbErr }, "Database insert for portfolio content failed, returning mock data directly.");
+    res.json({
+      id: -1,
       linkedInHeadline: result.linkedInHeadline,
       linkedInSummary: result.linkedInSummary,
       professionalBio: result.professionalBio,
-      projectDescriptions: result.projectDescriptions,
-    })
-    .returning();
-
-  res.json({
-    id: record.id,
-    linkedInHeadline: record.linkedInHeadline,
-    linkedInSummary: record.linkedInSummary,
-    professionalBio: record.professionalBio,
-    projectDescriptions: record.projectDescriptions as string[],
-    createdAt: record.createdAt.toISOString(),
-  });
+      projectDescriptions: result.projectDescriptions as string[],
+      createdAt: new Date().toISOString(),
+    });
+  }
 });
 
 export default router;

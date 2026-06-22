@@ -55,25 +55,37 @@ Analyze the match and return a JSON object with EXACTLY this structure:
 
   const derivedTitle = jobTitle || extractJobTitle(jobDescription);
 
-  const [record] = await db
-    .insert(jobMatchesTable)
-    .values({
-      jobTitle: derivedTitle,
-      jobDescription,
+  try {
+    const [record] = await db
+      .insert(jobMatchesTable)
+      .values({
+        jobTitle: derivedTitle,
+        jobDescription,
+        matchPercentage: result.matchPercentage,
+        skillGaps: result.skillGaps,
+        improvementSuggestions: result.improvementSuggestions,
+      })
+      .returning();
+
+    res.json({
+      id: record.id,
+      matchPercentage: record.matchPercentage,
+      skillGaps: record.skillGaps,
+      improvementSuggestions: record.improvementSuggestions,
+      jobTitle: record.jobTitle,
+      createdAt: record.createdAt.toISOString(),
+    });
+  } catch (dbErr) {
+    req.log.warn({ dbErr }, "Database insert for job match failed, returning mock data directly.");
+    res.json({
+      id: -1,
       matchPercentage: result.matchPercentage,
       skillGaps: result.skillGaps,
       improvementSuggestions: result.improvementSuggestions,
-    })
-    .returning();
-
-  res.json({
-    id: record.id,
-    matchPercentage: record.matchPercentage,
-    skillGaps: record.skillGaps,
-    improvementSuggestions: record.improvementSuggestions,
-    jobTitle: record.jobTitle,
-    createdAt: record.createdAt.toISOString(),
-  });
+      jobTitle: derivedTitle,
+      createdAt: new Date().toISOString(),
+    });
+  }
 });
 
 router.get("/jobs/history", async (_req, res): Promise<void> => {

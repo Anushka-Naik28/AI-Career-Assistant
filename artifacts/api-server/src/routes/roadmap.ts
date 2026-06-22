@@ -95,30 +95,45 @@ Provide realistic, current, and actionable recommendations. Include 5-8 skills, 
     };
   }
 
-  const [record] = await db
-    .insert(roadmapsTable)
-    .values({
+  try {
+    const [record] = await db
+      .insert(roadmapsTable)
+      .values({
+        targetRole: roadmap.targetRole,
+        overview: roadmap.overview,
+        skills: roadmap.skills,
+        certifications: roadmap.certifications,
+        projects: roadmap.projects,
+        milestones: roadmap.milestones,
+        timelineSummary: roadmap.timelineSummary,
+      })
+      .returning();
+
+    res.json({
+      id: record.id,
+      targetRole: record.targetRole,
+      overview: record.overview,
+      skills: record.skills as string[],
+      certifications: record.certifications as typeof roadmap.certifications,
+      projects: record.projects as typeof roadmap.projects,
+      milestones: record.milestones as typeof roadmap.milestones,
+      timelineSummary: record.timelineSummary,
+      createdAt: record.createdAt.toISOString(),
+    });
+  } catch (dbErr) {
+    req.log.warn({ dbErr }, "Database insert for career roadmap failed, returning mock data directly.");
+    res.json({
+      id: -1,
       targetRole: roadmap.targetRole,
       overview: roadmap.overview,
-      skills: roadmap.skills,
-      certifications: roadmap.certifications,
-      projects: roadmap.projects,
-      milestones: roadmap.milestones,
+      skills: roadmap.skills as string[],
+      certifications: roadmap.certifications as typeof roadmap.certifications,
+      projects: roadmap.projects as typeof roadmap.projects,
+      milestones: roadmap.milestones as typeof roadmap.milestones,
       timelineSummary: roadmap.timelineSummary,
-    })
-    .returning();
-
-  res.json({
-    id: record.id,
-    targetRole: record.targetRole,
-    overview: record.overview,
-    skills: record.skills as string[],
-    certifications: record.certifications as typeof roadmap.certifications,
-    projects: record.projects as typeof roadmap.projects,
-    milestones: record.milestones as typeof roadmap.milestones,
-    timelineSummary: record.timelineSummary,
-    createdAt: record.createdAt.toISOString(),
-  });
+      createdAt: new Date().toISOString(),
+    });
+  }
 });
 
 router.get("/roadmap/history", async (_req, res): Promise<void> => {

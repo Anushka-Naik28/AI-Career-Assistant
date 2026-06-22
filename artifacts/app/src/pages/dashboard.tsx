@@ -47,7 +47,7 @@ export default function Dashboard() {
           <CardContent className="h-[300px]">
             {trendLoading ? (
               <Skeleton className="w-full h-full" />
-            ) : atsTrend && atsTrend.length > 0 ? (
+            ) : Array.isArray(atsTrend) && atsTrend.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={atsTrend}>
                   <CartesianGrid strokeDasharray="3 3" opacity={0.1} vertical={false} />
@@ -74,7 +74,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {stats.recentActivity && stats.recentActivity.length > 0 ? (
+              {Array.isArray(stats?.recentActivity) && stats.recentActivity.length > 0 ? (
                 stats.recentActivity.map((activity, i) => (
                   <div key={i} className="flex items-center gap-4">
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">

@@ -1,6 +1,6 @@
-# [Project name]
+# Senior Architect UI Workspace
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A monorepo workspace for the Senior Architect UI project.
 
 ## Run & Operate
 
@@ -22,24 +22,21 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/app`: The main React front-end application
+- `artifacts/mockup-sandbox`: Mockup sandbox environment for UI/UX testing
+- `lib/db`: Database connection and schema definitions
+- `lib/api-spec`: OpenAPI specifications and generated types/hooks
+- `lib/integrations`: Server-side API integration modules
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Monorepo workspace structure powered by pnpm workspaces
+- Shared database connection, validation, and API schemas via local TypeScript libraries
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
-
-## User preferences
-
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Interactive AI Career Copilot for tech professionals
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Ensure a valid `DATABASE_URL` is set before starting development servers

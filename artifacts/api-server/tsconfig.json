@@ -4,6 +4,7 @@
     "incremental": true,
     "tsBuildInfoFile": ".tsbuildinfo",
     "outDir": "dist",
+    "noImplicitAny": false,
     "types": ["node"]
   },
   "include": ["src"]

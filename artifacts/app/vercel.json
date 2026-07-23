@@ -1,7 +1,4 @@
 {
-  "buildCommand": "pnpm run build",
-  "outputDirectory": "artifacts/app/dist/public",
-  "framework": "vite",
   "rewrites": [
     {
       "source": "/api/:path*",

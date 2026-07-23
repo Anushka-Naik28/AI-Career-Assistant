@@ -1,6 +1,4 @@
 {
-  "buildCommand": "pnpm run build",
-  "outputDirectory": "artifacts/app/dist/public",
   "rewrites": [
     {
       "source": "/api/:path*",

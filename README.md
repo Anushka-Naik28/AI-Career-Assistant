@@ -29,7 +29,6 @@ A **full‑stack AI platform** for resume analysis, ATS scoring, job matching, a
 
 ---
 
-Live Demo: 
 ## ⚙️ Setup
 ```bash
 # Install dependencies

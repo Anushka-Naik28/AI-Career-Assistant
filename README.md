@@ -1,42 +1,43 @@
-# Senior Architect UI Workspace
+# 🤖 AI Career Assistant
 
-A monorepo workspace for the Senior Architect UI project.
+A **full‑stack AI platform** for resume analysis, ATS scoring, job matching, and personalized career roadmaps.
 
-## Run & Operate
+---
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+## 🚀 Features
+- 📑 Resume parsing & ATS scoring
+- 🔍 AI‑powered job matching
+- 📊 Personalized career roadmap generation
+- 🔐 Secure authentication & authorization
+- 📈 Interactive dashboards with data visualizations
 
-## Stack
+---
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+## 🛠 Tech Stack
+**Frontend:** React.js, Next.js, TypeScript, Tailwind CSS  
+**Backend:** FastAPI, REST APIs, Clerk Auth  
+**Database:** MongoDB  
+**AI:** Gemini API, OpenAI API  
+**Deployment:** Vercel, Render  
 
-## Where things live
+---
 
-- `artifacts/app`: The main React front-end application
-- `artifacts/mockup-sandbox`: Mockup sandbox environment for UI/UX testing
-- `lib/db`: Database connection and schema definitions
-- `lib/api-spec`: OpenAPI specifications and generated types/hooks
-- `lib/integrations`: Server-side API integration modules
+## 📊 Demo Highlights
+- **Resume Upload → ATS Score**: Instant analysis with AI‑powered feedback  
+- **Job Matching Dashboard**: Personalized recommendations based on skills & experience  
+- **Career Roadmap Generator**: Step‑by‑step guidance for growth  
 
-## Architecture decisions
+---
 
-- Monorepo workspace structure powered by pnpm workspaces
-- Shared database connection, validation, and API schemas via local TypeScript libraries
+Live Demo: 
+## ⚙️ Setup
+```bash
+# Install dependencies
+pnpm install
 
-## Product
+# Run frontend
+pnpm --filter frontend dev
 
-- Interactive AI Career Copilot for tech professionals
+# Run backend
+pnpm --filter backend dev
 
-## Gotchas
-
-- Ensure a valid `DATABASE_URL` is set before starting development servers

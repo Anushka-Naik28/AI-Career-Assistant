@@ -26,7 +26,7 @@ A **full‑stack AI platform** for resume analysis, ATS scoring, job matching, a
 - **Resume Upload → ATS Score**: Instant analysis with AI‑powered feedback  
 - **Job Matching Dashboard**: Personalized recommendations based on skills & experience  
 - **Career Roadmap Generator**: Step‑by‑step guidance for growth  
-
+Demo Link : ai-career-assistant-api-server-71a3.vercel.app
 ---
 
 ## ⚙️ Setup

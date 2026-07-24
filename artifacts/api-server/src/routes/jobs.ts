@@ -15,12 +15,27 @@ router.post("/jobs/match", async (req, res): Promise<void> => {
 
   const { jobDescription, resumeDataUri, jobTitle } = parsed.data;
 
+  let resumePayload = resumeDataUri;
+  if (resumeDataUri.includes("base64,")) {
+    try {
+      const base64Data = resumeDataUri.split("base64,")[1];
+      const rawText = Buffer.from(base64Data, "base64").toString("utf-8");
+      const printableText = rawText.replace(/[^\x20-\x7E\x0A\x0D]/g, " ").replace(/\s+/g, " ").trim();
+      if (printableText.length > 50) {
+        resumePayload = printableText;
+      }
+    } catch {
+      resumePayload = resumeDataUri;
+    }
+  }
+
   const prompt = `You are an expert career advisor specializing in resume-to-job matching.
 
 Job Description:
 ${jobDescription}
 
-The resume is provided as a base64 data URI (abbreviated): ${resumeDataUri.substring(0, 80)}...
+Resume Content / Data URI:
+${resumePayload}
 
 Analyze the match and return a JSON object with EXACTLY this structure:
 {
@@ -88,26 +103,31 @@ Analyze the match and return a JSON object with EXACTLY this structure:
   }
 });
 
-router.get("/jobs/history", async (_req, res): Promise<void> => {
-  const records = await db
-    .select({
-      id: jobMatchesTable.id,
-      jobTitle: jobMatchesTable.jobTitle,
-      matchPercentage: jobMatchesTable.matchPercentage,
-      createdAt: jobMatchesTable.createdAt,
-    })
-    .from(jobMatchesTable)
-    .orderBy(desc(jobMatchesTable.createdAt))
-    .limit(20);
+router.get("/jobs/history", async (req, res): Promise<void> => {
+  try {
+    const records = await db
+      .select({
+        id: jobMatchesTable.id,
+        jobTitle: jobMatchesTable.jobTitle,
+        matchPercentage: jobMatchesTable.matchPercentage,
+        createdAt: jobMatchesTable.createdAt,
+      })
+      .from(jobMatchesTable)
+      .orderBy(desc(jobMatchesTable.createdAt))
+      .limit(20);
 
-  res.json(
-    records.map((r) => ({
-      id: r.id,
-      jobTitle: r.jobTitle,
-      matchPercentage: r.matchPercentage,
-      createdAt: r.createdAt.toISOString(),
-    }))
-  );
+    res.json(
+      records.map((r) => ({
+        id: r.id,
+        jobTitle: r.jobTitle,
+        matchPercentage: r.matchPercentage,
+        createdAt: r.createdAt.toISOString(),
+      }))
+    );
+  } catch (dbErr) {
+    req.log.warn({ dbErr }, "Database select failed for jobs history, returning fallback history.");
+    res.json([]);
+  }
 });
 
 function extractJobTitle(jd: string): string {

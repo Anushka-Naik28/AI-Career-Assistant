@@ -136,24 +136,29 @@ Provide realistic, current, and actionable recommendations. Include 5-8 skills, 
   }
 });
 
-router.get("/roadmap/history", async (_req, res): Promise<void> => {
-  const records = await db
-    .select({
-      id: roadmapsTable.id,
-      targetRole: roadmapsTable.targetRole,
-      createdAt: roadmapsTable.createdAt,
-    })
-    .from(roadmapsTable)
-    .orderBy(desc(roadmapsTable.createdAt))
-    .limit(20);
+router.get("/roadmap/history", async (req, res): Promise<void> => {
+  try {
+    const records = await db
+      .select({
+        id: roadmapsTable.id,
+        targetRole: roadmapsTable.targetRole,
+        createdAt: roadmapsTable.createdAt,
+      })
+      .from(roadmapsTable)
+      .orderBy(desc(roadmapsTable.createdAt))
+      .limit(20);
 
-  res.json(
-    records.map((r) => ({
-      id: r.id,
-      targetRole: r.targetRole,
-      createdAt: r.createdAt.toISOString(),
-    }))
-  );
+    res.json(
+      records.map((r) => ({
+        id: r.id,
+        targetRole: r.targetRole,
+        createdAt: r.createdAt.toISOString(),
+      }))
+    );
+  } catch (dbErr) {
+    req.log.warn({ dbErr }, "Database select failed for roadmap history, returning fallback history.");
+    res.json([]);
+  }
 });
 
 export default router;

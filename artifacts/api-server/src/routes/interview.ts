@@ -223,30 +223,35 @@ Return JSON with EXACTLY this structure:
   });
 });
 
-router.get("/interview/history", async (_req, res): Promise<void> => {
-  const records = await db
-    .select({
-      id: interviewSessionsTable.id,
-      role: interviewSessionsTable.role,
-      experienceLevel: interviewSessionsTable.experienceLevel,
-      overallScore: interviewSessionsTable.overallScore,
-      questionsAnswered: interviewSessionsTable.questionsAnswered,
-      createdAt: interviewSessionsTable.createdAt,
-    })
-    .from(interviewSessionsTable)
-    .orderBy(desc(interviewSessionsTable.createdAt))
-    .limit(20);
+router.get("/interview/history", async (req, res): Promise<void> => {
+  try {
+    const records = await db
+      .select({
+        id: interviewSessionsTable.id,
+        role: interviewSessionsTable.role,
+        experienceLevel: interviewSessionsTable.experienceLevel,
+        overallScore: interviewSessionsTable.overallScore,
+        questionsAnswered: interviewSessionsTable.questionsAnswered,
+        createdAt: interviewSessionsTable.createdAt,
+      })
+      .from(interviewSessionsTable)
+      .orderBy(desc(interviewSessionsTable.createdAt))
+      .limit(20);
 
-  res.json(
-    records.map((r) => ({
-      id: r.id,
-      role: r.role,
-      experienceLevel: r.experienceLevel,
-      overallScore: r.overallScore,
-      questionsAnswered: r.questionsAnswered,
-      createdAt: r.createdAt.toISOString(),
-    }))
-  );
+    res.json(
+      records.map((r) => ({
+        id: r.id,
+        role: r.role,
+        experienceLevel: r.experienceLevel,
+        overallScore: r.overallScore,
+        questionsAnswered: r.questionsAnswered,
+        createdAt: r.createdAt.toISOString(),
+      }))
+    );
+  } catch (dbErr) {
+    req.log.warn({ dbErr }, "Database select failed for interview history, returning fallback history.");
+    res.json([]);
+  }
 });
 
 export default router;

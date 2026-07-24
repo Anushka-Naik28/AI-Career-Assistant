@@ -150,7 +150,7 @@ export default function Interview() {
                           <div className="mt-3 p-3 rounded-lg bg-background/20 border border-background/10 space-y-1">
                             <div className="flex justify-between items-center">
                               <span className="text-xs font-medium opacity-80">Feedback</span>
-                              <Badge variant="secondary" className="text-xs bg-background/30">{msg.score}/10</Badge>
+                              <Badge variant="secondary" className="text-xs bg-background/30">{msg.score}/100</Badge>
                             </div>
                             <p className="text-xs opacity-90">{msg.feedback}</p>
                           </div>

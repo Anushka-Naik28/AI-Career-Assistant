@@ -32,6 +32,19 @@ router.post("/resume/analyze", async (req, res): Promise<void> => {
 The resume content is provided as a base64 data URI. Extract all relevant information and provide a thorough analysis.`;
 
   let analysis: any;
+  let resumePayload = resumeDataUri;
+  if (resumeDataUri.includes("base64,")) {
+    try {
+      const base64Data = resumeDataUri.split("base64,")[1];
+      const rawText = Buffer.from(base64Data, "base64").toString("utf-8");
+      const printableText = rawText.replace(/[^\x20-\x7E\x0A\x0D]/g, " ").replace(/\s+/g, " ").trim();
+      if (printableText.length > 50) {
+        resumePayload = printableText;
+      }
+    } catch {
+      resumePayload = resumeDataUri;
+    }
+  }
 
   try {
     const response = await openai.chat.completions.create({
@@ -44,7 +57,7 @@ The resume content is provided as a base64 data URI. Extract all relevant inform
             { type: "text", text: prompt },
             {
               type: "text",
-              text: `Resume data URI (base64 encoded): ${resumeDataUri.substring(0, 100)}... [full resume provided]`,
+              text: `Resume Content / Data URI:\n${resumePayload}`,
             },
           ],
         },
@@ -119,26 +132,31 @@ The resume content is provided as a base64 data URI. Extract all relevant inform
   }
 });
 
-router.get("/resume/history", async (_req, res): Promise<void> => {
-  const records = await db
-    .select({
-      id: resumeAnalysesTable.id,
-      filename: resumeAnalysesTable.filename,
-      atsScore: resumeAnalysesTable.atsScore,
-      createdAt: resumeAnalysesTable.createdAt,
-    })
-    .from(resumeAnalysesTable)
-    .orderBy(desc(resumeAnalysesTable.createdAt))
-    .limit(20);
+router.get("/resume/history", async (req, res): Promise<void> => {
+  try {
+    const records = await db
+      .select({
+        id: resumeAnalysesTable.id,
+        filename: resumeAnalysesTable.filename,
+        atsScore: resumeAnalysesTable.atsScore,
+        createdAt: resumeAnalysesTable.createdAt,
+      })
+      .from(resumeAnalysesTable)
+      .orderBy(desc(resumeAnalysesTable.createdAt))
+      .limit(20);
 
-  res.json(
-    records.map((r) => ({
-      id: r.id,
-      filename: r.filename,
-      atsScore: r.atsScore,
-      createdAt: r.createdAt.toISOString(),
-    }))
-  );
+    res.json(
+      records.map((r) => ({
+        id: r.id,
+        filename: r.filename,
+        atsScore: r.atsScore,
+        createdAt: r.createdAt.toISOString(),
+      }))
+    );
+  } catch (dbErr) {
+    req.log.warn({ dbErr }, "Database select failed for resume history, returning fallback history.");
+    res.json([]);
+  }
 });
 
 export default router;

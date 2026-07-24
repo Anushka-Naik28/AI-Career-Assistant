@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm run build",
-  "outputDirectory": "artifacts/app/dist/public",
+  "outputDirectory": "public",
   "framework": null,
   "rewrites": [
     {

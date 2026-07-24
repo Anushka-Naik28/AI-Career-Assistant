@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm run build",
+  "buildCommand": "pnpm install --production=false && pnpm run build",
   "outputDirectory": "public",
   "framework": null,
   "rewrites": [

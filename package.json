@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "preinstall": "node -e \"const fs = require('fs'); fs.rmSync('package-lock.json', { force: true }); fs.rmSync('yarn.lock', { force: true }); if (!/pnpm/.test(process.env.npm_config_user_agent || '')) { console.error('Use pnpm instead'); process.exit(1); }\"",
-    "build": "pnpm run typecheck && pnpm -r --if-present run build && node -e \"const fs = require('fs'); if (fs.existsSync('artifacts/app/dist')) { fs.cpSync('artifacts/app/dist', 'public', { recursive: true }); }\"",
+    "build": "pnpm run typecheck && pnpm -r --if-present run build && node -e \"const fs = require('fs'); if (fs.existsSync('artifacts/app/dist')) { fs.cpSync('artifacts/app/dist', 'public', { recursive: true }); fs.cpSync('artifacts/app/dist', 'artifacts/app/public', { recursive: true }); }\"",
     "start": "node artifacts/api-server/dist/index.mjs",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
